@@ -1,0 +1,29 @@
+version: '2'
+services: 
+    db:
+        image: mongo:latest
+        ports:
+            - "27017:27017"
+        volumes: 
+            - /Users/chenhuahuan/DevopsProjects/Hygieia/liumiaocn_examples/data/hygieia:/data/db
+
+    api:
+        image: liumiaocn/hyapi
+        ports:
+            - "8080:8080"
+        environment: 
+            - SPRING_DATA_MONGODB_DATABASE=dashboarddb
+            - SPRING_DATA_MONGODB_HOST=db
+            - SPRING_DATA_MONGODB_PORT=27017
+            - SPRING_DATA_MONGODB_USERNAME=dashboarduser
+            - SPRING_DATA_MONGODB_PASSWORD=dbpassword
+
+    ui:
+        image: liumiaocn/hygui
+        depends_on:
+            - api
+        ports:
+            - "8088:80"
+        environment:
+            - API_HOST=api
+            - API_PORT=8080
